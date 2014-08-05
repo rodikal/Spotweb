@@ -23,7 +23,7 @@ class Dao_Base_Spot implements Dao_Spot {
 		 * there are the basic search criteria (category, title, etc) 
 		 * which are always available in the query
 		 */
-		$criteriaFilter = " WHERE (bl.spotterid IS NULL) ";
+		$criteriaFilter = " WHERE s.spotterid NOT IN (SELECT * FROM spotteridblacklist AS bl WHERE (((bl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") OR (bl.ouruserid = -1)) AND (bl.idtype = 1))) ";
 		if (!empty($parsedSearch['filter'])) {
 			$criteriaFilter .= ' AND ' . $parsedSearch['filter'];
 		} # if 
@@ -110,17 +110,18 @@ class Dao_Base_Spot implements Dao_Spot {
 			f.verified AS verified,
 			COALESCE(bl.idtype, wl.idtype, gwl.idtype) AS idtype
 			" . $extendedFieldList . "
-			FROM spots AS s " . 
+			FROM (
+				SELECT * FROM spots AS s " .
+				$criteriaFilter . "
+				ORDER BY " . $sortList . 
+				" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset)
+			) AS s" . 
 			$additionalTableList . 
 			$additionalJoinList . 
 			" LEFT JOIN spotstatelist AS l on ((s.messageid = l.messageid) AND (l.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ")) 
 			LEFT JOIN spotsfull AS f ON (s.messageid = f.messageid) 
-			LEFT JOIN spotteridblacklist as bl ON ((bl.spotterid = s.spotterid) AND ((bl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") OR (bl.ouruserid = -1)) AND (bl.idtype = 1))
 			LEFT JOIN spotteridblacklist as wl on ((wl.spotterid = s.spotterid) AND ((wl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") AND (wl.idtype = 2)))
-			LEFT JOIN spotteridblacklist as gwl on ((gwl.spotterid = s.spotterid) AND ((gwl.ouruserid = -1) AND (gwl.idtype = 2))) " .
-			$criteriaFilter . "
-			ORDER BY " . $sortList . 
-			" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset);
+			LEFT JOIN spotteridblacklist as gwl on ((gwl.spotterid = s.spotterid) AND ((gwl.ouruserid = -1) AND (gwl.idtype = 2)))";
 
 		/*
 		 * Did we get more results than originally asked? Remove the last element
