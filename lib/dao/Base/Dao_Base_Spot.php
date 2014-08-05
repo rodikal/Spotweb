@@ -111,7 +111,7 @@ class Dao_Base_Spot implements Dao_Spot {
 			COALESCE(wl.idtype, gwl.idtype) AS idtype
 			" . $extendedFieldList . "
 			FROM (
-				SELECT * FROM spots AS s " .
+				SELECT * " . $extendedFieldList . " FROM spots AS s " .
 				$criteriaFilter . "
 				ORDER BY " . $sortList . 
 				" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset . "
