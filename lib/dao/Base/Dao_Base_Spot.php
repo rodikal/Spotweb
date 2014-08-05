@@ -114,7 +114,7 @@ class Dao_Base_Spot implements Dao_Spot {
 				SELECT * FROM spots AS s " .
 				$criteriaFilter . "
 				ORDER BY " . $sortList . 
-				" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset)
+				" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset) . "
 			) AS s" . 
 			$additionalTableList . 
 			$additionalJoinList . 
