@@ -109,7 +109,6 @@ class Dao_Base_Spot implements Dao_Spot {
  			s.editor AS editor,
 			f.verified AS verified,
 			COALESCE(wl.idtype, gwl.idtype) AS idtype
-			" . $extendedFieldList . "
 			FROM (
 				SELECT * " . $extendedFieldList . " FROM spots AS s " .
 				$criteriaFilter . "
