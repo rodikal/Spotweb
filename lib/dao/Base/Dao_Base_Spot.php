@@ -114,14 +114,14 @@ class Dao_Base_Spot implements Dao_Spot {
 				SELECT * FROM spots AS s " .
 				$criteriaFilter . "
 				ORDER BY " . $sortList . 
-				" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset) . "
+				" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset . "
 			) AS s" . 
 			$additionalTableList . 
 			$additionalJoinList . 
 			" LEFT JOIN spotstatelist AS l on ((s.messageid = l.messageid) AND (l.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ")) 
 			LEFT JOIN spotsfull AS f ON (s.messageid = f.messageid) 
 			LEFT JOIN spotteridblacklist as wl on ((wl.spotterid = s.spotterid) AND ((wl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") AND (wl.idtype = 2)))
-			LEFT JOIN spotteridblacklist as gwl on ((gwl.spotterid = s.spotterid) AND ((gwl.ouruserid = -1) AND (gwl.idtype = 2)))";
+			LEFT JOIN spotteridblacklist as gwl on ((gwl.spotterid = s.spotterid) AND ((gwl.ouruserid = -1) AND (gwl.idtype = 2)))");
 
 		/*
 		 * Did we get more results than originally asked? Remove the last element
