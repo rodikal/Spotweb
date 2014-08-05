@@ -23,7 +23,7 @@ class Dao_Base_Spot implements Dao_Spot {
 		 * there are the basic search criteria (category, title, etc) 
 		 * which are always available in the query
 		 */
-		$criteriaFilter = " WHERE s.spotterid NOT IN (SELECT * FROM spotteridblacklist AS bl WHERE (((bl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") OR (bl.ouruserid = -1)) AND (bl.idtype = 1))) ";
+		$criteriaFilter = " WHERE s.spotterid NOT IN (SELECT bl.spotterid FROM spotteridblacklist AS bl WHERE (((bl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") OR (bl.ouruserid = -1)) AND (bl.idtype = 1))) ";
 		if (!empty($parsedSearch['filter'])) {
 			$criteriaFilter .= ' AND ' . $parsedSearch['filter'];
 		} # if 
