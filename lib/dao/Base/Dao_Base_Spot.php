@@ -85,42 +85,42 @@ class Dao_Base_Spot implements Dao_Spot {
 		 * check whether any more results are available
 		 */
  		$tmpResult = $this->_conn->arrayQuery("SELECT s.id AS id,
-												s.messageid AS messageid,
-												s.category AS category,
-												s.poster AS poster,
-												l.download as downloadstamp, 
-												l.watch as watchstamp,
-												l.seen AS seenstamp,
-												s.subcata AS subcata,
-												s.subcatb AS subcatb,
-												s.subcatc AS subcatc,
-												s.subcatd AS subcatd,
-												s.subcatz AS subcatz,
-												s.title AS title,
-												s.tag AS tag,
-												s.stamp AS stamp,
-												s.moderated AS moderated,
-												s.filesize AS filesize,
-												s.spotrating AS rating,
-												s.commentcount AS commentcount,
-												s.reportcount AS reportcount,
-												s.spotterid AS spotterid,
- 												s.editstamp AS editstamp,
- 												s.editor AS editor,
-												f.verified AS verified,
-												COALESCE(bl.idtype, wl.idtype, gwl.idtype) AS idtype
-												" . $extendedFieldList . "
-									 FROM spots AS s " . 
-									 $additionalTableList . 
-									 $additionalJoinList . 
-								   " LEFT JOIN spotstatelist AS l on ((s.messageid = l.messageid) AND (l.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ")) 
-									 LEFT JOIN spotsfull AS f ON (s.messageid = f.messageid) 
-									 LEFT JOIN spotteridblacklist as bl ON ((bl.spotterid = s.spotterid) AND ((bl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") OR (bl.ouruserid = -1)) AND (bl.idtype = 1))
-									 LEFT JOIN spotteridblacklist as wl on ((wl.spotterid = s.spotterid) AND ((wl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") AND (wl.idtype = 2)))
-									 LEFT JOIN spotteridblacklist as gwl on ((gwl.spotterid = s.spotterid) AND ((gwl.ouruserid = -1) AND (gwl.idtype = 2))) " .
-									 $criteriaFilter . "
-									 ORDER BY " . $sortList . 
-								   " LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset);
+			s.messageid AS messageid,
+			s.category AS category,
+			s.poster AS poster,
+			l.download as downloadstamp, 
+			l.watch as watchstamp,
+			l.seen AS seenstamp,
+			s.subcata AS subcata,
+			s.subcatb AS subcatb,
+			s.subcatc AS subcatc,
+			s.subcatd AS subcatd,
+			s.subcatz AS subcatz,
+			s.title AS title,
+			s.tag AS tag,
+			s.stamp AS stamp,
+			s.moderated AS moderated,
+			s.filesize AS filesize,
+			s.spotrating AS rating,
+			s.commentcount AS commentcount,
+			s.reportcount AS reportcount,
+			s.spotterid AS spotterid,
+ 			s.editstamp AS editstamp,
+ 			s.editor AS editor,
+			f.verified AS verified,
+			COALESCE(bl.idtype, wl.idtype, gwl.idtype) AS idtype
+			" . $extendedFieldList . "
+			FROM spots AS s " . 
+			$additionalTableList . 
+			$additionalJoinList . 
+			" LEFT JOIN spotstatelist AS l on ((s.messageid = l.messageid) AND (l.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ")) 
+			LEFT JOIN spotsfull AS f ON (s.messageid = f.messageid) 
+			LEFT JOIN spotteridblacklist as bl ON ((bl.spotterid = s.spotterid) AND ((bl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") OR (bl.ouruserid = -1)) AND (bl.idtype = 1))
+			LEFT JOIN spotteridblacklist as wl on ((wl.spotterid = s.spotterid) AND ((wl.ouruserid = " . $this->_conn->safe( (int) $ourUserId) . ") AND (wl.idtype = 2)))
+			LEFT JOIN spotteridblacklist as gwl on ((gwl.spotterid = s.spotterid) AND ((gwl.ouruserid = -1) AND (gwl.idtype = 2))) " .
+			$criteriaFilter . "
+			ORDER BY " . $sortList . 
+			" LIMIT " . (int) ($limit + 1) ." OFFSET " . (int) $offset);
 
 		/*
 		 * Did we get more results than originally asked? Remove the last element
@@ -178,41 +178,40 @@ class Dao_Base_Spot implements Dao_Spot {
 	function getFullSpot($messageId, $ourUserId) {
 		SpotTiming::start(__CLASS__ . __FUNCTION__);
 		$tmpArray = $this->_conn->arrayQuery("SELECT s.id AS id,
-												s.messageid AS messageid,
-												s.category AS category,
-												s.poster AS poster,
-												s.subcata AS subcata,
-												s.subcatb AS subcatb,
-												s.subcatc AS subcatc,
-												s.subcatd AS subcatd,
-												s.subcatz AS subcatz,
-												s.title AS title,
-												s.tag AS tag,
-												s.stamp AS stamp,
-												s.moderated AS moderated,
-												s.spotrating AS rating,
-												s.commentcount AS commentcount,
-												s.reportcount AS reportcount,
-												s.filesize AS filesize,
-												s.spotterid AS spotterid,
-												s.editstamp AS editstamp,
-												s.editor AS editor,
-												l.download AS downloadstamp,
-												l.watch as watchstamp,
-												l.seen AS seenstamp,
-												f.verified AS verified,
-												f.usersignature AS \"user-signature\",
-												f.userkey AS \"user-key\",
-												f.xmlsignature AS \"xml-signature\",
-												f.fullxml AS fullxml,
-												COALESCE(bl.idtype, wl.idtype, gwl.idtype) AS listidtype
-												FROM spots AS s
-												LEFT JOIN spotstatelist AS l on ((s.messageid = l.messageid) AND (l.ouruserid = :ouruserid1))
-												LEFT JOIN spotteridblacklist as bl ON ((bl.spotterid = s.spotterid) AND ((bl.ouruserid = :ouruserid2) OR (bl.ouruserid = -1)) AND (bl.idtype = 1))
-												LEFT JOIN spotteridblacklist as wl on ((wl.spotterid = s.spotterid) AND ((wl.ouruserid = :ouruserid3)) AND (wl.idtype = 2))
-												LEFT JOIN spotteridblacklist as gwl on ((gwl.spotterid = s.spotterid) AND ((gwl.ouruserid = -1)) AND (gwl.idtype = 2))
-												JOIN spotsfull AS f ON f.messageid = s.messageid
-										  WHERE s.messageid = :messageid",
+			s.messageid AS messageid,
+			s.category AS category,
+			s.poster AS poster,
+			s.subcata AS subcata,
+			s.subcatb AS subcatb,
+			s.subcatc AS subcatc,
+			s.subcatd AS subcatd,
+			s.subcatz AS subcatz,
+			s.title AS title,
+			s.tag AS tag,
+			s.stamp AS stamp,
+			s.moderated AS moderated,
+			s.spotrating AS rating,
+			s.commentcount AS commentcount,
+			s.reportcount AS reportcount,
+			s.filesize AS filesize,
+			s.spotterid AS spotterid,
+			s.editstamp AS editstamp,
+			s.editor AS editor,
+			l.download AS downloadstamp,
+			l.watch as watchstamp,
+			l.seen AS seenstamp,
+			f.verified AS verified,
+			f.usersignature AS \"user-signature\",
+			f.userkey AS \"user-key\",
+			f.xmlsignature AS \"xml-signature\",
+			f.fullxml AS fullxml,
+			COALESCE(bl.idtype, wl.idtype, gwl.idtype) AS listidtype
+			FROM (SELECT * FROM spots AS s WHERE s.messageid = :messageid) AS s
+			LEFT JOIN (SELECT * FROM spotstatelist AS l WHERE (l.ouruserid = :ouruserid1)) AS l on (s.messageid = l.messageid)
+			LEFT JOIN (SELECT * FROM spotteridblacklist as bl WHERE (((bl.ouruserid = :ouruserid2) OR (bl.ouruserid = -1)) AND (bl.idtype = 1))) as bl ON (bl.spotterid = s.spotterid)
+			LEFT JOIN (SELECT * FROM spotteridblacklist as wl WHERE ((wl.ouruserid = :ouruserid3) AND (wl.idtype = 2))) as wl on (wl.spotterid = s.spotterid)
+			LEFT JOIN (SELECT * FROM spotteridblacklist as gwl WHERE ((gwl.ouruserid = -1) AND (gwl.idtype = 2))) as gwl on (gwl.spotterid = s.spotterid)
+			JOIN spotsfull AS f ON f.messageid = s.messageid",
             array(
                 ':ouruserid1' => array($ourUserId, PDO::PARAM_INT),
                 ':ouruserid2' => array($ourUserId, PDO::PARAM_INT),
